@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>YouTube</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Birthstone&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#191919; --card:#3b5384; --ink:#ffffff; --soft:rgba(255,255,255,.68); --line:rgba(255,255,255,.3);
+  --script:'Birthstone','Brush Script MT','Segoe Script',cursive;
+  --sans:system-ui,-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;
+  --maxw:520px;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--card:#2c4170}}
+:root[data-theme="dark"]{--card:#2c4170}
+html{height:100%;background:var(--bg);scroll-padding-top:env(safe-area-inset-top,0px)}
+body{height:100%;margin:0;background:var(--bg);color:var(--ink);display:flex;align-items:center;justify-content:center;font-family:var(--sans);overflow:auto}
+[hidden]{display:none!important}
+.card{box-sizing:border-box;width:min(94vw,var(--maxw));background:var(--card);border:5px solid var(--ink);border-radius:30px;padding:14px 18px 16px;text-align:center}
+.title{font-family:var(--script);font-size:clamp(44px,12vw,68px);line-height:1}
+.rule{height:2px;background:var(--line);border-radius:2px;margin:10px auto 14px;width:60%}
+.player{display:block;width:100%;aspect-ratio:16/9;border:0;border-radius:16px;background:rgba(0,0,0,.25)}
+.empty{padding:34px 18px;border-radius:16px;background:rgba(0,0,0,.25);font-size:14px;line-height:1.5;color:var(--soft)}
+.meta{margin-top:12px;font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--soft)}
+</style>
+</head>
+<body>
+<main class="card">
+  <div class="title" id="title">Now Playing</div>
+  <div class="rule"></div>
+  <iframe class="player" id="yt" title="YouTube playlist" loading="lazy"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+  <div class="empty" id="empty" hidden>Paste your YouTube playlist link into index.html (YOUTUBE_LINK) to show it here.</div>
+  <div class="meta" id="meta"></div>
+</main>
+<script>
+/* ===== EDIT THESE ===== */
+var YOUTUBE_LINK = '';                       // paste a YouTube playlist link, e.g. https://www.youtube.com/playlist?list=PLxxxxxxxx
+var TITLE        = 'Now Playing';            // script heading
+var BOTTOM_LINE  = 'YouTube · My Playlist';  // small line at the bottom
+/* ====================== */
+(function(){
+  document.getElementById('title').textContent=TITLE;
+  document.getElementById('meta').textContent=BOTTOM_LINE;
+  var yt=document.getElementById('yt');
+  var m=YOUTUBE_LINK.match(/[?&]list=([A-Za-z0-9_-]+)/);
+  if(m){ yt.src='https://www.youtube.com/embed/videoseries?list='+m[1]; }
+  else { yt.hidden=true; document.getElementById('empty').hidden=false; }
+  var sizes={small:'320px',medium:'400px',large:'520px'};
+  function applySize(){var s=sizes[location.hash.replace('#','')]||'520px';document.documentElement.style.setProperty('--maxw',s);}
+  applySize(); window.addEventListener('hashchange',applySize);
+})();
+</script>
+</body>
+</html>
